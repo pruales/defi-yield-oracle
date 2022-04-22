@@ -1,0 +1,6 @@
+{
+  "cSpell.words": ["godotenv"],
+  "yaml.schemas": {
+    "https://json.schemastore.org/github-workflow.json": "file:///Users/paul/src/defi-yield-oracle/.github/workflows/deploy.yml"
+  }
+}

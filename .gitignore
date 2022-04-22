@@ -23,3 +23,5 @@ tmp/
 go.work
 
 go.sum
+
+.env
