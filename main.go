@@ -19,10 +19,18 @@ func main () {
 		port = "8080"
 	}
 
-	app := fiber.New()
+	app := fiber.New(fiber.Config{
+		ErrorHandler: func(c *fiber.Ctx, err error) error {
+			code := fiber.StatusInternalServerError
 
-	app.Use(func(c *fiber.Ctx) error {
-		return c.SendStatus(404)
+			if e, ok := err.(*fiber.Error); ok {
+				code = e.Code
+			}
+
+			c.Status(code).SendString(err.Error())
+
+			return nil
+		},
 	})
 
 	app.Get("/", func(c *fiber.Ctx) error {
