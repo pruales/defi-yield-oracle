@@ -2,8 +2,11 @@ package fetchers
 
 import (
 	"encoding/json"
+	"fmt"
+	"os"
 
 	"github.com/go-rod/rod"
+	"github.com/go-rod/rod/lib/launcher"
 )
 
 type ScrapeFrax struct {
@@ -52,7 +55,12 @@ const fraxPoolsURL = "https://api.frax.finance/pools"
 
 
 func GetFraxPools() (*FraxResponse, error) {
-	page := rod.New().MustConnect().MustPage(fraxPoolsURL)
+	url := os.Getenv("SCRAPE_HOST")
+	if url == "" {
+		return nil, fmt.Errorf("oracleScraper env var not set")
+	}
+	u := launcher.MustResolveURL(url)
+	page := rod.New().ControlURL(u).MustConnect().MustPage(fraxPoolsURL)
 	element := page.MustWaitLoad().MustSearch("pre")
 	pageData := new(PageResponse)
 	err := json.Unmarshal([]byte(element.MustText()), pageData)
