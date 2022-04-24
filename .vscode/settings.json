@@ -1,5 +1,5 @@
 {
-  "cSpell.words": ["godotenv"],
+  "cSpell.words": ["Frax", "godotenv", "UPSTASH"],
   "yaml.schemas": {
     "https://json.schemastore.org/github-workflow.json": "file:///Users/paul/src/defi-yield-oracle/.github/workflows/deploy.yml"
   }

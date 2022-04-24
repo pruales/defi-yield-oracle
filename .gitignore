@@ -25,3 +25,4 @@ go.work
 go.sum
 
 .env
+.vscode/*

@@ -5,7 +5,9 @@ import (
 	"os"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/joho/godotenv"
+	"github.com/pruales/defi-yield-oracle/api/routes"
 )
 
 func main () {
@@ -32,10 +34,14 @@ func main () {
 			return nil
 		},
 	})
-
+	app.Use(cors.New())
 	app.Get("/", func(c *fiber.Ctx) error {
-		return c.SendString("Hello, World!")
+		return c.SendString("Hello world!")
 	})
+
+	api := app.Group("/api")
+	routes.TaskRouter(api)
+	routes.PoolRouter(api)
 
 	log.Println("Listening on port", port)
 	log.Fatal(app.Listen(":" + port))
