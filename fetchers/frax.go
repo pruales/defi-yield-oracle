@@ -27,31 +27,6 @@ type ScrapeFrax struct {
 		} `json:"info"`
 		Body string `json:"body"`
 	}
-
-
-// func GetFraxPools() (*ScrapeFrax,  error) {
-// 	url := "https://scrapeninja.p.rapidapi.com/scrape"
-// 	var payload = []byte(`{
-// 		"url": "https://api.frax.finance/pools"
-// 		}`)
-// 	req, err := http.NewRequest("POST", url, bytes.NewBuffer(payload))
-// 	if err != nil {
-// 		return nil, err
-// 	}
-// 	req.Header.Add("content-type", "application/json")
-// 	req.Header.Add("X-RapidAPI-Host", "scrapeninja.p.rapidapi.com")
-// 	req.Header.Add("X-RapidAPI-Key", "b1983ef175msh6f6053886b793a1p14c788jsn6fbed52aad90")
-// 	response := new(ScrapeFrax)
-// 	err = client.Do(req, &response)
-// 	if err != nil {
-// 		return nil, err
-// 	}
-// 	response.Body = strings.ReplaceAll(response.Body, "\\", "")
-// 	response.Body = strings.ReplaceAll(response.Body, "\"[", "[")
-// 	response.Body = strings.ReplaceAll(response.Body, "]\"", "]")
-// 	return response, nil
-// }
-
 type FraxPool struct {
 	Identifier      string   `json:"identifier"`
 	Chain           string   `json:"chain"`
