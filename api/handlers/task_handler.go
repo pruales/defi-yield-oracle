@@ -4,14 +4,12 @@ import (
 	"log"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/pruales/defi-yield-oracle/data"
 	"github.com/pruales/defi-yield-oracle/fetchers"
 	"github.com/pruales/defi-yield-oracle/fetchers/cache"
 )
 
-const (
-	FRAX_POOLS = "FRAX_POOLS"
-)
-
+//TODO: make this a an array of tasks and handle them in parallel using map of task keys and handlers
 type TaskHandlerBody struct {
 	Task string `json:"task"`
 }
@@ -26,14 +24,14 @@ func TaskHandler() fiber.Handler {
 		log.Println("TaskHandler triggered with task: ", t.Task)
 
 		switch t.Task {
-			case FRAX_POOLS:
+			case data.FRAX_POOLS:
 				response, err := fetchers.GetFraxPools()
 				if err != nil {
 					log.Println("Error getting FRAX pools: ", err)
 					return err
 				}
 
-				err = cache.Put(FRAX_POOLS, response)
+				err = cache.Put(data.FRAX_POOLS, response)
 				if err != nil {
 					log.Println("Error putting FRAX pools into cache: ", err)
 					return err

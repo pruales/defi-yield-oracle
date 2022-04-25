@@ -3,12 +3,15 @@ package fetchers
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"os"
+	"strings"
 
 	"github.com/go-rod/rod"
 	"github.com/go-rod/rod/lib/launcher"
+	"github.com/pruales/defi-yield-oracle/data"
+	"github.com/pruales/defi-yield-oracle/fetchers/cache"
 )
-
 type ScrapeFrax struct {
 		Info struct {
 			Version       string `json:"version"`
@@ -51,6 +54,19 @@ type FraxResponse struct {
 	Pools []FraxPool `json:"pools"`
 }
 
+type FraxCacheItem struct {
+	Result *string `json:"result"`
+	Error *string `json:"error"`
+}
+
+type FraxPoolsCacheItem struct {
+	Pools []FraxPool `json:"pools"`
+}
+type FraxCacheResponse struct {
+	Value FraxPoolsCacheItem `json:"value"`
+	UpdatedAt string `json:"updatedAt"`
+}
+
 const fraxPoolsURL = "https://api.frax.finance/pools"
 
 
@@ -71,5 +87,26 @@ func GetFraxPools() (*FraxResponse, error) {
 	fraxPools := new(FraxResponse)
 	fraxPools.Pools = *pageData
 
+	return fraxPools, nil
+}
+
+func GetFraxPoolsFromCache() (*FraxCacheResponse, error) {
+	fraxRespose := new(FraxCacheItem)
+	err := cache.Get(data.FRAX_POOLS, fraxRespose)
+	if err != nil {
+		log.Println("Error retrieving FRAX pools from cache: ", err)
+		return nil, err
+	}
+	if fraxRespose.Error != nil {
+		return nil, fmt.Errorf("Error retrieving FRAX pools from cache: %s", *fraxRespose.Error)
+	}
+	clean := strings.ReplaceAll(*fraxRespose.Result, "\\", "")
+	log.Println(clean)
+	fraxPools := new(FraxCacheResponse)
+	err = json.Unmarshal([]byte(clean), fraxPools)
+	if err != nil {
+		log.Println("Error unmarshalling FRAX pools from cache: ", err)
+		return nil, err
+	}
 	return fraxPools, nil
 }
